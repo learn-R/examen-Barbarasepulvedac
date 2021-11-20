@@ -1,13 +1,49 @@
-Version: 1.0
+###############################
+#Procesamiento de datos
+###Encuesta Termometro Social octubre 2020
+##Nombre: Bárbara Sepúlveda Castillo
+##Curso: Opt. Análisis de datos estadísticos en R 
+## Profesora: Valentina Andrade
+##Ayudantes: Dafne Jaime y Nicolás Godoy
+#Fecha: 22 de noviembre, 2021
+##############################
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+#1. Cargamos los paquetes
+pacman::p_load(sjPlot, tidyverse, srvyr,
+               survey,
+               magrittr, haven, dyplr)
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
+#3. Cargamos los datos originales a utilizar
+TS4 <- read_dta("input/data/TS4.dta")
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+#4. Seleccionamos las variables a utilizar
+datos_proc <- TS4 %>% 
+  select(edad, sexo, tipo_vivienda = b2, est_animo = c2, trat_medico = c3, problemas = c10)
+
+
+##variables Modulo de confinamiento: 
+#edad    #sexo 
+
+##variables Modulo Salud Mental: 
+#b2: Usted vive en casa o departamento? <- tipo_vivienda
+#c2: Comparación estado de ánimo principio de la pandemia y actualmente <- est_animo
+#c3: Necesidad de algun tratamiento medico (psicologo, medico general, psiquiatra)<- trat_medico
+#c10: Frecuencia para hablar de sus problemas con familia y amigos <- problemas
+
+#5. Recodificacion de variables 
+
+#EDAD
+
+datos_proc <- datos_proc %>% 
+  mutate(edad = as_factor(car::recode(edad, c("18:39='Jovenes';40:59='Adulto'; 60:96='Adulto mayor'"), as.factor = T, levels = c("Jovenes", "Adulto", "Adulto mayor"))))
+
+#TIPO VIVIENDA
+
+datos_proc <- datos_proc %>% 
+  mutate(tipo_vivienda = as_factor(tipo_vivienda))
+
+#PROBLEMAS
+datos_proc<- datos_proc %>% 
+  mutate(problemas = as_factor(car::recode(problemas, c("1:2" = "Nunca", "3" = "A veces", "3:4" = "Siempre"), as.factor = T, levels = c("Nunca", "A veces", "Siempre")))
+
+         
