@@ -3,7 +3,7 @@
     "path": "~/BARBARA/CURSO R/examen-Barbarasepulvedac/R/examen.Rmd",
     "project_path": "R/examen.Rmd",
     "type": "r_markdown",
-    "hash": "11753209",
+    "hash": "3365191067",
     "contents": "",
     "dirty": false,
     "created": 1637464852484.0,
@@ -13,15 +13,16 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "14,0",
-        "scrollLine": "0"
+        "cursorPosition": "41,11",
+        "scrollLine": "35",
+        "last_setup_crc32": "08B37A84bb338d19"
     },
     "folds": "",
-    "lastKnownWriteTime": 1637470188,
+    "lastKnownWriteTime": 1637537265,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1637470188330,
+    "last_content_update": 1637537265674,
     "read_only": false,
     "read_only_alternatives": []
 }

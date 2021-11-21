@@ -12,4 +12,35 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# Proyecto de investigación: "Factores que repercuten en la salud mental de los chilenos/as en pandemia por COVID-19"
+
+## Abstract
+
+## Introducción 
+La pandemia de Covid-19 ha traído consigo diversos cambios en la vida de las personas, desde la compra de productos básicos hasta las formas de relacionarse y comunicarse. Este proyecto se interesa por abordar aquellos factores que pueden o no influir en la percepción del estado de ánimo actual que tienen los chilenos/as en pandemia. A partir de la encuesta Termómetro social realizada en octubre del 2020, se analizarán estos factores, que se definieron a partir de la i nvestigación de Buitrago et. al (2021) en donde indican que los factores psicosociales que afectan la salud mental pueden ser "autopercepción de mal estado de salud, frustración aburrimiento y soledad, sentimientos de privación de libertad, inexistencia o no utilización del factor protector del sentimiento de solidaridad y apoyo mutuo", etc. (Buitrago et. al, 2021) Pero tambien interesa en este proyecto analizar si existen diferencias importantes por sexo y edad, ya que también estos autores afirman que los mas afectados en salud mental por esta pandemia han sido los adultos mayores y las mujeres.
+A partir de la investigación y encuesta la pregunta de investigación que guiará el proyecto será ¿Qué factores influyen en la percepción del estado de ánimo en la pandemia en Chile?. 
+
+## Análisis
+Para responder a la pregunta del proyecto, se proponen las siguientes hipótesis: 
+- Las personas que viven en departamento, percibirán que ha empeorado su estado de ánimo durante la pandemia más que aquellas personas que viven en Casa
+
+- Aquellas personas que consideran que su estado de ánimo ha empeorado en los ulimos meses de la pandemia, son las que creen que han necesitado de un tratamiento de salud (psicológico, medico o psiquiátrico) 
+
+- Las personas que hablan de sus problemas con familiares amigos en menos frecuencia, tienden a creen que su estado de ánimo ha empeorado durante la pandemia 
+
+- Las mujeres y adultos mayores, perciben que su estado de ánimo actual ha empeorado durante la pandemia 
+
+```{r Carga_paquetes, include=FALSE}
+pacman::p_load(tidyverse, sjPlot, haven, 
+               srvyr,
+               magrittr,
+               dyplr)
+
+```
+
+```{r Carga_df, include=FALSE}
+datos_proc <- readRDS("output/data/datos_proc.rds")
+
+```
+
 

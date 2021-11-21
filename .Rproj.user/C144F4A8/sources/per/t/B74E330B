@@ -3,7 +3,7 @@
     "path": "~/BARBARA/CURSO R/examen-Barbarasepulvedac/R/examen_proc.R",
     "project_path": "R/examen_proc.R",
     "type": "r_source",
-    "hash": "2772862415",
+    "hash": "2353918540",
     "contents": "",
     "dirty": false,
     "created": 1637449412679.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "49,60",
-        "scrollLine": "44"
+        "cursorPosition": "67,0",
+        "scrollLine": "53"
     },
     "folds": "",
-    "lastKnownWriteTime": 1637464761,
+    "lastKnownWriteTime": 1637536965,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1637464761154,
+    "last_content_update": 1637536966000,
     "read_only": false,
     "read_only_alternatives": []
 }

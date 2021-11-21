@@ -12,7 +12,6 @@
 #1. Carga de librerías
 pacman::p_load(tidyverse, sjPlot, haven, 
                srvyr,
-               survey,
                magrittr,
                dyplr)
 #2. Carga de base de datos Termómetro Social
@@ -58,6 +57,11 @@ datos_proc <- datos_proc %>%
                                          problemas == 4 ~ "Siempre",
                                          problemas == 5 ~ "Siempre",
                                          FALSE ~ NA_character_)))
+
+##Le indicamos a R que estas variables son de factor para utilizarlas en la regresion lineal
+datos_proc <- datos_proc %>% 
+  mutate_at(vars(edad, sexo, problemas, tipo_vivienda), 
+            funs(forcats::as_factor(.)))
 
 #5. Guardamos el df procesado 
 saveRDS(datos_proc, file = "output/data/datos_proc.rds")
