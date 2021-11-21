@@ -1,0 +1,15 @@
+---
+title: "Proyecto Final"
+subtitle: "Opt. Análisis de datos estadísticos en R"
+author: "Bárbara Sepúlveda Castillo"
+date: "22-11-2021"
+output: 
+  pdf_document: 
+    toc: yes
+    highlight: monochrome
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+

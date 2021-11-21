@@ -1,9 +1,9 @@
 {
     "id": "17D1E7F3",
-    "path": null,
-    "project_path": null,
+    "path": "~/BARBARA/CURSO R/examen-Barbarasepulvedac/R/examen.Rmd",
+    "project_path": "R/examen.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "11753209",
     "contents": "",
     "dirty": false,
     "created": 1637464852484.0,
@@ -17,11 +17,11 @@
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 7957704863871026466,
-    "encoding": "",
+    "lastKnownWriteTime": 1637470188,
+    "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1637464852484,
+    "last_content_update": 1637470188330,
     "read_only": false,
     "read_only_alternatives": []
 }
