@@ -1,0 +1,245 @@
+###############################
+## Tarea N°4
+#Universidad Alberto Hurtado
+#Curso: Opt. Análisis de datos estadísticos en R
+#Profesora:Valentina Andrade
+#Ayudantes:Dafne Jaime y Nicolás Godoy
+#15 de octubre,2021
+###############################
+
+
+#1.cargamos los paquetes
+pacman::p_load(tidyverse,
+              sjmisc,
+              srvyr,
+              dplyr,
+              tidyr,
+              magrittr)
+
+
+#2.cargamos los datos
+datos <- read.csv("input/data/julio-2021 (1).csv",
+                      sep=";", dec = ",", 
+                      encoding = "UTF-8", stringsAsFactors = F)
+
+save(datos, file = "input/datos.csv")
+
+#3.Selección de variables
+
+#ID_Empresa
+#FE:Factor de expansión suavizado y calibrado según tasa de respuesta del Módulo COVID-19
+#C:Sección económica de la empresa
+#t :Tamaño según número de trabajadores de la empresa
+#M1 -Suspensión temporal del contrato de trabajo por acto de autoridad
+#M2 -Suspensión temporal del contrato de trabajo por medio de un Pacto (individual o colectivo)
+#M4 -Pacto de reducción temporal de la jornada laboral(hasta en un 50% de su jornada de trabajo)
+#M5 -Pacto de reducción temporal de remuneraciones por mutuo acuerdo
+#M7 -Trabajo remoto desde casa,Trabajo a distancia o Teletrabajo
+
+#Variables personas (Hacen referencia a las mismas de empresa,solo que aquí se mide numero de trabajadores)
+#M1_NT
+#M2_NT
+#M4_NT
+#M5_NT
+#M7_NT
+
+#4.Creamos nuestro dataframe
+
+datos_ine_proc<-select(datos,#recortamos solo a las variables seleccionadas
+                    ID_Empresa,
+                    c,
+                    t,
+                    M1,
+                    M2,
+                    M4,
+                    M5,
+                    M7,
+                    M1_NT,
+                    M2_NT,
+                    M4_NT,
+                    M5_NT,
+                    M7_NT,
+                    NT_t,
+                    FE)
+
+
+#5.Exploramos las variables
+
+#Variables numéricas o cuantitativas
+descr(datos_ine_proc$ID_Empresa)
+descr(datos_ine_proc$t)
+descr(datos_ine_proc$M1_NT)
+descr(datos_ine_proc$M2_NT)
+descr(datos_ine_proc$M4_NT)
+descr(datos_ine_proc$M5_NT)
+descr(datos_ine_proc$M7_NT)
+
+#Variables categóricas
+frq(datos_ine_proc$c)
+frq(datos_ine_proc$M1)
+frq(datos_ine_proc$M2)
+frq(datos_ine_proc$M4)
+frq(datos_ine_proc$M5)
+frq(datos_ine_proc$M7)
+
+
+#6.Creamos las nuevas variables a partir de la recodificación de M1 y M2 
+
+#M1
+datos_ine_proc %>% 
+  mutate(M1_rec = if_else(M1 == "Si", 1, 0))
+
+datos_ine_proc<- datos_ine_proc %>% 
+  mutate(M1_rec = if_else(M1 == "Si", 1, 0))
+#M2
+datos_ine_proc %>% 
+  mutate(M2_rec = if_else(M2 == "Si", 1, 0))
+
+datos_ine_proc<- datos_ine_proc %>% 
+  mutate(M2_rec = if_else(M2 == "Si", 1, 0))
+
+
+#7.Sumamos los valores de las variables M1 y M2 para personas y empresas, quitando los casos perdidos 
+
+##MIM2_NT
+datos_ine_proc<-datos_ine_proc%>%
+  rowwise()%>%
+  mutate(M1M2_NT =sum(M1_NT,M2_NT,na.rm =T))
+
+##M1_m2
+datos_ine_proc<-datos_ine_proc%>%
+  rowwise()%>%
+  mutate(M1_m2 =sum(M1_rec,M2_rec,na.rm =T))
+
+##8.Creación del objeto de encuesta
+datos_proc <- datos_ine_proc %>% #Creamos un nuevo objeto llamado datos_proc con la información de datos_ine_proc
+  as_survey_design(ids = ID_Empresa,
+                   weights = FE) 
+saveRDS(datos_proc, file = "output/datos_proc.rds")
+
+##9. Análisis reportados en las tablas 1, 2, 3 y 6
+
+###Tabla 1
+
+####Proporción por Empresas
+
+#M1
+M1_T1 <- datos_proc %>%
+  group_by(M1) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm =T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+#M2
+M2_T1 <- datos_proc %>% 
+  group_by(M2) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm =T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+# M4:  
+M4_T1 <- datos_proc %>% 
+  group_by(M4) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm =T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+# M5:
+M5_T1 <- datos_proc %>% 
+  group_by(M5) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm = T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+# M7:
+M7_T1 <- datos_proc %>% 
+  group_by(M7) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm = T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+
+####Proporción por Personas trabajadoras
+
+#M1_NT
+ M1_NT_T1 <- datos_proc %>% 
+  summarise(M1_NT_T1 = survey_total(M1_NT, vartype = "ci", level = .95, na.rm = T),
+            NT_t_T1 = survey_total(NT_t, vartype = "ci", level = .95, na.rm = T)) %>% 
+  mutate(porcentaje = (M1_NT_T1/NT_t_T1)*100)
+ 
+#M2_NT
+ M2_NT_T1 <- datos_proc %>% 
+   summarise(M2_NT_T1 = survey_total(M2_NT, vartype = "ci", level = .95, na.rm = T),
+             NT_t_T1 = survey_total(NT_t, vartype = "ci", level = .95, na.rm = T)) %>% 
+   mutate(porcentaje = (M2_NT_T1/NT_t_T1)*100)
+
+#M4_NT
+ M4_NT_T1 <- datos_proc %>% 
+   summarise(M4_NT_T1 = survey_total(M4_NT, vartype = "ci", level = .95, na.rm = T),
+             NT_t_T1 = survey_total(NT_t, vartype = "ci", level = .95, na.rm = T)) %>% 
+   mutate(porcentaje = (M4_NT_T1/NT_t_T1)*100) 
+ 
+#M5_NT
+ M5_NT_T1 <- datos_proc %>% 
+   summarise(M5_NT_T1 = survey_total(M5_NT, vartype = "ci", level = .95, na.rm = T),
+             NT_t_T1 = survey_total(NT_t, vartype = "ci", level = .95, na.rm = T)) %>% 
+   mutate(porcentaje = (M5_NT_T1/NT_t_T1)*100) 
+
+ #M7_NT
+ M7_NT_T1 <- datos_proc %>% 
+   summarise(M7_NT_T1 = survey_total(M7_NT, vartype = "ci", level = .95, na.rm = T),
+             NT_t_T1 = survey_total(NT_t, vartype = "ci", level = .95, na.rm = T)) %>% 
+   mutate(porcentaje = (M7_NT_T1/NT_t_T1)*100)
+
+
+### Tabla 2
+
+####Proporción por Empresas
+datos_proc %>% 
+  group_by(c,M1_m2) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm = T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+SectorE_M1m2 <- datos_proc %>% 
+  group_by(c, M1_m2) %>% 
+  summarise (porcentaje = survey_mean(vartype = "ci", na.rm = T)) %>%
+  mutate (porcentaje = porcentaje*100) %>% 
+  ungroup()
+
+####Proporción por Personas trabajadoras
+
+
+### Tabla 3
+
+datos_proc %>% 
+  group_by(t, M1_m2) %>% 
+  summarise(prop = survey_prop(vartype = "ci" , na.rm = T)) %>% 
+  mutate(por = prop*100,
+         prop_low = prop_low*100,
+         prop_upp = prop_upp*100)
+
+#estimacion puntual - muestra comparada con la estimacion nacional
+
+
+
+  
+
+
+
+
+
+
+
+
+#estimacion puntual - muestra comparada con la estimacion nacional
+
+
+
+

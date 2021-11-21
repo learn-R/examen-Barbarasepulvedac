@@ -1,0 +1,70 @@
+###############################
+## Tarea N°5
+#Universidad Alberto Hurtado
+#Curso: Opt. Análisis de datos estadísticos en R
+#Profesora:Valentina Andrade
+#Ayudantes:Dafne Jaime y Nicolás Godoy
+#2 de noviembre,2021
+###############################
+
+##1. Cargar paquetes
+
+pacman::p_load(tidyverse, haven, sjPlot, sjmisc, survey, srvyr)
+
+
+##2. Cargar datos
+datos <- read_sav("input/data/BenA-tez.sav")
+
+
+##3. Seleccionar y cambiar nombre a las variables
+
+#Mantener distancia física: variable f7_3 llamar "cuidarse" - transformar a dummy 
+#Percepción de riesgo al COVID-19: variable f6 llamar "riesgo"
+#Trabajar: variable g1, llamar "trabaja"
+#Edad: variable "edad" 
+
+datos_proc <- datos %>% 
+  select(entrevistado, f7_3, f6, g1, edad, factor_expansion)
+
+datos_proc <- datos_proc %>% 
+  rename(cuidarse = f7_3, riesgo = f6, trabaja = g1)
+
+datos_proc <- datos_proc %>% filter(entrevistado == 1) 
+
+sjPlot::view_df(datos_proc,
+                encoding = 'latin9')
+
+
+
+##4. Procesamiento 
+
+datos_proc <- datos_proc %>% 
+  mutate(trabaja = as_factor(trabaja),
+         cuidarse = car::recode(cuidarse, c("c(8,9)=NA")),
+         riesgo  = car::recode(riesgo, c("c(8,9)=NA")))
+
+datos_proc <- datos_proc %>% 
+  mutate(riesgo = as_factor(riesgo))
+
+datos_proc <- datos_proc %>% 
+  mutate(riesgo_cont = as.numeric(riesgo))
+
+datos_proc <- datos_proc %>% 
+  mutate(dummy_cuidarse = car::recode(cuidarse, c("c(1,2)=0;c(3,4,5)=1;c(8,9)=NA"), as.factor =  T,
+                                      levels = c(0, 1)))
+
+datos_proc<- datos_proc %>% 
+  mutate(edad = as_factor(car::recode(edad, c("18:39='Jovenes';40:59='Adulto'; 60:96='Adulto mayor'"), as.factor = T, levels = c("Jovenes", "Adulto", "Adulto mayor"))))
+
+obj_enc <- datos_proc %>% 
+  as_survey_design(ids = 1 ,
+                   weights = factor_expansion)
+
+
+##5. guardamos los datos procesados
+
+saveRDS(datos_proc, file = "output/data/datos_proc.rds")
+
+
+
+
