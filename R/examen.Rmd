@@ -13,6 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE) 
 Sys.setlocale("LC_CTYPE", "spanish")
 options(OutDec= ",", digits = 3)
+options(scipen = 999)
 ```
 
 # Proyecto de investigación: "Factores que repercuten en la salud mental de los chilenos/as en pandemia por COVID-19"
@@ -74,21 +75,42 @@ sjPlot::tab_model(modelo1,
                   file = "../output/figures/tab_modelo1.doc")
 ```
 
+Tabla para Modelo 2
+
 ```{r}
-
+sjPlot::tab_model(modelo2, 
+                  show.ci=FALSE,  
+                  encoding = "UTF-8", 
+                  file = "../output/figures/tab_modelo2.doc")
 ```
-
-
 
 4.2 Modelo 3
 ```{r modelo3, echo=TRUE}
 modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
 ```
 
+Tabla para Modelo 3
+
+```{r}
+sjPlot::tab_model(modelo3, 
+                  show.ci=FALSE,  
+                  encoding = "UTF-8", 
+                  file = "../output/figures/tab_modelo3.doc")
+```
+
 4.4 Modelo Completo con todas las variables 
 ```{r modelo_completo, echo=TRUE}
 modelo_completo <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc, weights = factor_TS4)
 
+```
+
+Tabla para Modelo Completo 
+
+```{r}
+sjPlot::tab_model(modelo_completo, 
+                  show.ci=FALSE,  
+                  encoding = "UTF-8", 
+                  file = "../output/figures/tab_modelo_completo.doc")
 ```
 
 

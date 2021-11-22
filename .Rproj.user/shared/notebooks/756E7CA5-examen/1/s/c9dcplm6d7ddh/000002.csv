@@ -1,0 +1,4 @@
+"0","sjPlot::tab_model(modelo_completo, "
+"0","                  show.ci=FALSE,  "
+"0","                  encoding = ""UTF-8"", "
+"0","                  file = ""../output/figures/tab_modelo_completo.doc"")"
