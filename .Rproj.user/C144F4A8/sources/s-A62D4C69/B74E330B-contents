@@ -20,7 +20,7 @@ TS4 <- read_dta("input/data/TS4.dta")
 #3. Selección de variables para nuevo DF
 
 datos_proc <- TS4 %>% 
-  select(sexo, edad, tipo_vivienda = b2, est_animo = c2, trat_salud = c3, problemas = c10)
+  select(sexo, edad, tipo_vivienda = b2, est_animo = c2, trat_salud = c3, problemas = c10, factor_TS4)
 
 #Variables seleccionadas
 #sexo     #edad
@@ -48,20 +48,25 @@ datos_proc <- datos_proc %>%
 datos_proc <- datos_proc %>% 
   mutate(trat_salud2 = if_else(trat_salud == "1. Sí", 1, 0))
 
-#Variable problemas
+#Problemas
 
 datos_proc <- datos_proc %>% 
-  mutate(problemas = as_factor(case_when(problemas == 1 ~ "Nunca",
-                                         problemas == 2 ~ "Nunca",
-                                         problemas == 3 ~ "A veces",
-                                         problemas == 4 ~ "Siempre",
-                                         problemas == 5 ~ "Siempre",
-                                         FALSE ~ NA_character_)))
+  mutate(problemas = as.numeric(problemas))
+
+datos_proc<-datos_proc %>%
+  mutate(problemas2 = case_when(problemas == 1 ~ "Nunca",
+                                problemas == 2 ~ "Nunca",
+                                problemas == 3 ~ "A veces",
+                                problemas == 4 ~ "Siempre",
+                                problemas == 5 ~ "Siempre",
+                                 FALSE ~ NA_character_))
+
 
 ##Le indicamos a R que estas variables son de factor para utilizarlas en la regresion lineal
 datos_proc <- datos_proc %>% 
-  mutate_at(vars(edad, sexo, problemas, tipo_vivienda), 
+  mutate_at(vars(edad, sexo, tipo_vivienda, problemas2), 
             funs(forcats::as_factor(.)))
+datos_proc$tipo_vivienda <-  forcats::as_factor(datos_proc$tipo_vivienda)
 
 #5. Guardamos el df procesado 
 saveRDS(datos_proc, file = "output/data/datos_proc.rds")

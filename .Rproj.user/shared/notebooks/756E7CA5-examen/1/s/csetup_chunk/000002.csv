@@ -1,1 +1,7 @@
-"0","knitr::opts_chunk$set(echo = TRUE)"
+"0","knitr::opts_chunk$set(echo = TRUE) "
+"0","Sys.setlocale(""LC_CTYPE"", ""spanish"")"
+"1","[1]"
+"1"," ""Spanish_Spain.1252"""
+"1","
+"
+"0","options(OutDec= "","", digits = 3)"

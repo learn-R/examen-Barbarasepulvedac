@@ -10,8 +10,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE) 
+Sys.setlocale("LC_CTYPE", "spanish")
+options(OutDec= ",", digits = 3)
 ```
+
 # Proyecto de investigación: "Factores que repercuten en la salud mental de los chilenos/as en pandemia por COVID-19"
 
 ## Abstract
@@ -30,17 +33,68 @@ Para responder a la pregunta del proyecto, se proponen las siguientes hipótesis
 
 - Las mujeres y adultos mayores, perciben que su estado de ánimo actual ha empeorado durante la pandemia 
 
+Se realizará un proceso de regresión lineal entre las distintas variables, y se analizarán las comparaciones pertinentes, respondiendo tambien a las principales hipótesis
+
+1. Se cargan los paquetes necesarios para el proceso 
 ```{r Carga_paquetes, include=FALSE}
-pacman::p_load(tidyverse, sjPlot, haven, 
+pacman::p_load(tidyverse, sjPlot, 
                srvyr,
                magrittr,
                dyplr)
 
 ```
 
+2. Se carga la base de datos que contiene las variables seleccionadas 
 ```{r Carga_df, include=FALSE}
-datos_proc <- readRDS("output/data/datos_proc.rds")
+datos_proc <- readRDS("../output/data/datos_proc.rds")
 
 ```
+
+3. Creamos nuestro objeto encuesta para diseño muestral
+```{r obj_enc, echo=TRUE}
+obj_enc <- datos_proc %>% 
+  as_survey_design(ids = 1 ,
+                   weights = factor_TS4) 
+```
+
+4. Creamos tres modelos de regresión lineal simple con la variable dependiente "Estado de ánimo actual" 
+4.1 Modelo 1 y 2 
+```{r modelo1_2, echo=TRUE}
+modelo1 <- lm(est_animo ~ tipo_vivienda, data = datos_proc, weights= factor_TS4)
+
+modelo2 <- lm(est_animo ~ problemas2, data = datos_proc, weights= factor_TS4)
+
+```
+
+Tabla para el Modelo 1
+```{r tab_modelo1, echo=TRUE}
+sjPlot::tab_model(modelo1, 
+                  show.ci=FALSE,  
+                  encoding = "UTF-8", 
+                  file = "../output/figures/tab_modelo1.doc")
+```
+
+```{r}
+
+```
+
+
+
+4.2 Modelo 3
+```{r modelo3, echo=TRUE}
+modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
+```
+
+4.4 Modelo Completo con todas las variables 
+```{r modelo_completo, echo=TRUE}
+modelo_completo <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc, weights = factor_TS4)
+
+```
+
+
+
+
+
+
 
 

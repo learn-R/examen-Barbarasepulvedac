@@ -1,0 +1,2 @@
+"0","modelo_completo <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc, weights = factor_TS4)"
+"0",""

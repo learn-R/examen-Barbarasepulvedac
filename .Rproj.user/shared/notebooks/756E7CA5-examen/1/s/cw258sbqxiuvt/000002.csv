@@ -1,0 +1,4 @@
+"0","modelo1 <- lm(est_animo ~ tipo_vivienda, data = datos_proc, weights= factor_TS4)"
+"0",""
+"0","modelo2 <- lm(est_animo ~ problemas2, data = datos_proc, weights= factor_TS4)"
+"0",""

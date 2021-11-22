@@ -1,4 +1,4 @@
-"0","pacman::p_load(tidyverse, sjPlot, haven, "
+"0","pacman::p_load(tidyverse, sjPlot, "
 "0","               srvyr,"
 "0","               magrittr,"
 "0","               dyplr)"
@@ -29,7 +29,7 @@ Please use `install.packages('BiocManager')` and then retry.
  "
 "2"," there is no package called ‘dyplr’
 "
-"2","Warning in pacman::p_load(tidyverse, sjPlot, haven, srvyr, magrittr, dyplr) :"
+"2","Warning in pacman::p_load(tidyverse, sjPlot, srvyr, magrittr, dyplr) :"
 "2","
  "
 "2"," Failed to install/load:
