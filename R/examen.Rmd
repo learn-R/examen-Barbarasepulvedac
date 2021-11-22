@@ -4,6 +4,10 @@ subtitle: "Opt. Análisis de datos estadísticos en R"
 author: "Bárbara Sepúlveda Castillo"
 date: "22-11-2021"
 output: 
+  html_document: 
+    toc: yes
+    highlight: monochrome
+    theme: cosmo
   pdf_document: 
     toc: yes
     highlight: monochrome
@@ -64,7 +68,7 @@ datos_proc <- readRDS("../output/data/datos_proc.rds")
 ```
 
 3. Creamos nuestro objeto encuesta para diseño muestral
-```{r obj_enc, echo=TRUE}
+```{r obj_enc, echo=FALSE}
 obj_enc <- datos_proc %>% 
   as_survey_design(ids = 1 ,
                    weights = factor_TS4) 
@@ -79,7 +83,7 @@ modelo2 <- lm(est_animo ~ problemas2, data = datos_proc, weights= factor_TS4)
 
 ```
 
-Tabla para el Modelo 1
+**Tabla para el Modelo 1**
 ```{r tab_modelo1, echo=FALSE}
 sjPlot::tab_model(modelo1, 
                   show.ci=FALSE,  
@@ -87,8 +91,9 @@ sjPlot::tab_model(modelo1,
                   file = "../output/figures/tab_modelo1.doc")
 ```
 
+En la tabla para el modelo 1 
 
-Tabla para Modelo 2
+**Tabla para Modelo 2**
 
 ```{r tabla_modelo2, echo=FALSE}
 sjPlot::tab_model(modelo2, 
@@ -97,13 +102,13 @@ sjPlot::tab_model(modelo2,
                   file = "../output/figures/tab_modelo2.doc")
 ```
 
-4.2 Modelo 3
+4.2 Creamos el Modelo 3
 ```{r modelo3, echo=TRUE}
 modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
 ```
 
 
-Tabla para Modelo 3
+**Tabla para Modelo 3**
 
 ```{r tabla_modelo3, echo=FALSE}
 sjPlot::tab_model(modelo3, 
@@ -119,13 +124,29 @@ modelo_completo <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + pro
 ```
 
 
-Tabla para Modelo Completo 
+**Tabla para Modelo Completo** 
 
 ```{r tabla_model_comp, echo=FALSE}
 sjPlot::tab_model(modelo_completo, 
                   show.ci=FALSE,  
                   encoding = "UTF-8", 
                   file = "../output/figures/tab_modelo_completo.doc")
+```
+
+**Tabla con todos los modelos**
+
+```{r tab_all, echo=FALSE}
+sjPlot::tab_model(list(modelo1,modelo2,modelo3),
+  string.intercept = "(Intercepto)",
+  string.pred = "Predictores",
+  p.style = "stars",
+  show.ci = FALSE,
+  collapse.ci = T,
+  digits = 3,
+  dv.labels = c("Modelo 1", "Modelo 2","Modelo 3"),
+  show.reflvl = TRUE,
+  encoding = "UTF-8",
+  lang = "es")
 ```
 
 
