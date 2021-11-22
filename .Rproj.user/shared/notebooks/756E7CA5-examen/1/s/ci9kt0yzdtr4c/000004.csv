@@ -1,5 +1,6 @@
 "0","pacman::p_load(tidyverse, sjPlot, "
 "0","               srvyr,"
+"0","               survey,"
 "0","               magrittr,"
 "0","               dyplr)"
 "2","Installing package into ‘C:/Users/Barby/Documents/R/win-library/4.1’
@@ -29,7 +30,7 @@ Please use `install.packages('BiocManager')` and then retry.
  "
 "2"," there is no package called ‘dyplr’
 "
-"2","Warning in pacman::p_load(tidyverse, sjPlot, srvyr, magrittr, dyplr) :"
+"2","Warning in pacman::p_load(tidyverse, sjPlot, srvyr, survey, magrittr, dyplr) :"
 "2","
  "
 "2"," Failed to install/load:

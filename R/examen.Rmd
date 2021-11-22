@@ -56,6 +56,7 @@ Se realizará un proceso de regresión lineal entre las distintas variables, y s
 ```{r Carga_paquetes, include=FALSE}
 pacman::p_load(tidyverse, sjPlot, 
                srvyr,
+               survey,
                magrittr,
                dyplr)
 
@@ -67,19 +68,22 @@ datos_proc <- readRDS("../output/data/datos_proc.rds")
 
 ```
 
-3. Creamos nuestro objeto encuesta para diseño muestral
+3. Creamos nuestro objeto encuesta para diseño muestral y hacer posterior comparación de modelos
 ```{r obj_enc, echo=FALSE}
 obj_enc <- datos_proc %>% 
   as_survey_design(ids = 1 ,
                    weights = factor_TS4) 
 ```
 
-4. Creamos tres modelos de regresión lineal simple con la variable dependiente "Estado de ánimo actual" 
+4. Creamos dos modelos de regresión lineal simple con la variable dependiente "Estado de ánimo actual" 
 4.1 Modelo 1 y 2 
 ```{r modelo1_2, echo=TRUE}
 modelo1 <- lm(est_animo ~ tipo_vivienda, data = datos_proc, weights= factor_TS4)
 
 modelo2 <- lm(est_animo ~ problemas2, data = datos_proc, weights= factor_TS4)
+
+summary(modelo1)  #Revisamos los valores de ambos modelos
+summary(modelo2)
 
 ```
 
@@ -91,8 +95,6 @@ sjPlot::tab_model(modelo1,
                   file = "../output/figures/tab_modelo1.doc")
 ```
 
-En la tabla para el modelo 1 
-
 **Tabla para Modelo 2**
 
 ```{r tabla_modelo2, echo=FALSE}
@@ -102,11 +104,31 @@ sjPlot::tab_model(modelo2,
                   file = "../output/figures/tab_modelo2.doc")
 ```
 
-4.2 Creamos el Modelo 3
-```{r modelo3, echo=TRUE}
-modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
+```{r}
+sjPlot::tab_model(list(modelo1,modelo2),
+  string.intercept = "(Intercepto)",
+  string.pred = "Predictores",
+  p.style = "stars",
+  show.ci = FALSE,
+  collapse.ci = T,
+  digits = 3,
+  dv.labels = c("Modelo 1", "Modelo 2"),
+  show.reflvl = TRUE,
+  encoding = "UTF-8",
+  lang = "es")
 ```
 
+En la tabla para el modelo 1 los valores p no son estadísticamente significativos para ninguna de las categorías. Esto quiere decir que, las respuestas asociadas al tipo de vivienda: departamento por si sola, no afecta la percepción de empeoramiento del estado de ánimo durante la pandemia. Además el R^2 es demasiado bajo para indicar que el modelo entre estas dos variables es bueno. 
+
+
+
+
+4.2 Creamos el Modelo 3 con sexo y edad
+```{r modelo3, echo=TRUE}
+modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
+
+summary(modelo3) #Revisamos el modelo
+```
 
 **Tabla para Modelo 3**
 
@@ -117,11 +139,24 @@ sjPlot::tab_model(modelo3,
                   file = "../output/figures/tab_modelo3.doc")
 ```
 
+
 4.4 Modelo Completo con todas las variables 
-```{r modelo_completo, echo=TRUE}
+
+Creamos un modelo completo sin diseño muestral
+```{r modelo_completo_sin, echo=TRUE}
 modelo_completo <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc, weights = factor_TS4)
 
+summary(modelo_completo) #Revisamos los valores del modelo
+
 ```
+
+Creamos un modelo completo con diseño muestral
+```{r model_survey, echo=TRUE}
+modelo_survey <- svyglm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, family = gaussian(link = "identity"), design = obj_enc)
+
+summary(modelo_survey) #Revisamos los valores del modelo
+```
+
 
 
 **Tabla para Modelo Completo** 
@@ -131,6 +166,16 @@ sjPlot::tab_model(modelo_completo,
                   show.ci=FALSE,  
                   encoding = "UTF-8", 
                   file = "../output/figures/tab_modelo_completo.doc")
+```
+
+**Tabla para Modelo survey**
+```{r tabla0, echo=FALSE}
+sjPlot::tab_model(modelo_survey, 
+                  show.ci=FALSE,  
+                  encoding = "UTF-8",
+                  p.val = "wald",
+                  transform = "exp",
+                  file = "../output/figures/tab_modelo_survey.doc")
 ```
 
 **Tabla con todos los modelos**
@@ -151,7 +196,7 @@ sjPlot::tab_model(list(modelo1,modelo2,modelo3),
 
 
 5. Gráfico para Modelo Completo 
-```{r forest_plot, echo=FALSE}
+```{r grafico1, echo=FALSE}
 plot_model(modelo_completo, type = c("est"),
   show.intercept = T,
   show.values = T,
@@ -160,6 +205,18 @@ plot_model(modelo_completo, type = c("est"),
   vline.color = "purple",
   title = "Modelo de regresión lineal para Modelo Completo")
 ```
+
+```{r grafico2}
+plot_model(modelo_survey, type = c("est"),
+  show.intercept = T,
+  show.values = T,
+  show.p = T,
+  digits = 3,
+  vline.color = "red",
+  title = "Modelo de regresión lineal para Modelo Completo con diseño muestral")
+```
+
+
 
 # Conclusiones
 # Referencias 

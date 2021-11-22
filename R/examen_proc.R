@@ -25,7 +25,7 @@ datos_proc <- TS4 %>%
 #Variables seleccionadas
 #sexo     #edad
 #b2: tipo de vivienda ¿Usted vive en casa o departamento?
-#c2: estado de animo luego de la pandemia COVID-19 ¿cómo evalúa su estado de ánimo actual?
+#c2: (Dependiende)estado de animo luego de la pandemia COVID-19 ¿cómo evalúa su estado de ánimo actual?
 #c3: tratamiento medico durante pandemia ¿usted ha creído que necesita un tratamiento en salud mental con un profesional del área (con psicólogo, médico general o psiquiatra)?
 #c10: Por favor, indique con qué frecuencia usted puede hablar de sus problemas con su familia o amigos
 
