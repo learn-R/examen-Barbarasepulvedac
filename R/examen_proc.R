@@ -64,7 +64,7 @@ datos_proc<-datos_proc %>%
 
 ##Le indicamos a R que estas variables son de factor para utilizarlas en la regresion lineal
 datos_proc <- datos_proc %>% 
-  mutate_at(vars(edad, sexo, tipo_vivienda, problemas2), 
+  mutate_at(vars(edad, sexo, tipo_vivienda, problemas2, trat_salud), 
             funs(forcats::as_factor(.)))
 datos_proc$tipo_vivienda <-  forcats::as_factor(datos_proc$tipo_vivienda)
 

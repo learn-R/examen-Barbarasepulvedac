@@ -8,9 +8,6 @@ output:
     toc: yes
     highlight: monochrome
     theme: cosmo
-  pdf_document: 
-    toc: yes
-    highlight: monochrome
 ---
 
 
@@ -46,7 +43,7 @@ Para responder a la pregunta del proyecto, se proponen las siguientes hipótesis
 
 - Aquellas personas que consideran que su estado de ánimo ha empeorado en los ulimos meses de la pandemia, son las que creen que han necesitado de un tratamiento de salud (psicológico, medico o psiquiátrico) 
 
-- Las personas que hablan de sus problemas con familiares amigos en menos frecuencia, tienden a creen que su estado de ánimo ha empeorado durante la pandemia 
+- Las personas que hablan de sus problemas con familiares amigos en menos frecuencia, tienden a creer que su estado de ánimo ha empeorado durante la pandemia 
 
 - Las mujeres y adultos mayores, perciben que su estado de ánimo actual ha empeorado durante la pandemia 
 
@@ -75,72 +72,54 @@ obj_enc <- datos_proc %>%
                    weights = factor_TS4) 
 ```
 
-4. Creamos dos modelos de regresión lineal simple con la variable dependiente "Estado de ánimo actual" 
-4.1 Modelo 1 y 2 
+4. Creamos tres modelos de regresión lineal simple con la variable dependiente "Estado de ánimo actual"
+
+4.1 Modelo 1,2 y 3 
 ```{r modelo1_2, echo=TRUE}
 modelo1 <- lm(est_animo ~ tipo_vivienda, data = datos_proc, weights= factor_TS4)
 
 modelo2 <- lm(est_animo ~ problemas2, data = datos_proc, weights= factor_TS4)
 
-summary(modelo1)  #Revisamos los valores de ambos modelos
+modelo3 <- lm(est_animo ~ trat_salud, data = datos_proc, weights= factor_TS4)
+
+summary(modelo1)  #Revisamos los valores de todos los modelos
 summary(modelo2)
+summary(modelo3)
 
 ```
 
-**Tabla para el Modelo 1**
-```{r tab_modelo1, echo=FALSE}
-sjPlot::tab_model(modelo1, 
-                  show.ci=FALSE,  
-                  encoding = "UTF-8", 
-                  file = "../output/figures/tab_modelo1.doc")
+4.2 Creamos el Modelo 3 con sexo y edad
+```{r modelo3, echo=TRUE}
+modelo4 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
+
+summary(modelo4) #Revisamos el modelo
 ```
 
-**Tabla para Modelo 2**
 
-```{r tabla_modelo2, echo=FALSE}
-sjPlot::tab_model(modelo2, 
-                  show.ci=FALSE,  
-                  encoding = "UTF-8", 
-                  file = "../output/figures/tab_modelo2.doc")
-```
+**Tabla con los cuatro modelos**
 
-```{r}
-sjPlot::tab_model(list(modelo1,modelo2),
+```{r tab1, echo=FALSE, include=TRUE}
+sjPlot::tab_model(list(modelo1,modelo2,modelo3,modelo4),
   string.intercept = "(Intercepto)",
   string.pred = "Predictores",
   p.style = "stars",
   show.ci = FALSE,
   collapse.ci = T,
   digits = 3,
-  dv.labels = c("Modelo 1", "Modelo 2"),
+  dv.labels = c("Modelo 1", "Modelo 2","Modelo 3","Modelo 4"),
   show.reflvl = TRUE,
   encoding = "UTF-8",
   lang = "es")
 ```
 
-En la tabla para el modelo 1 los valores p no son estadísticamente significativos para ninguna de las categorías. Esto quiere decir que, las respuestas asociadas al tipo de vivienda: departamento por si sola, no afecta la percepción de empeoramiento del estado de ánimo durante la pandemia. Además el R^2 es demasiado bajo para indicar que el modelo entre estas dos variables es bueno. 
+En el modelo 1 los valores p no son estadísticamente significativos para ninguna de las categorías. Esto quiere decir que, las respuestas asociadas al tipo de vivienda: departamento por si sola, no afecta la percepción de empeoramiento del estado de ánimo durante la pandemia. Se acepta la hipótesis nula que indica la no existencia de relacion entre estas variables. Además el R^2 es demasiado bajo para indicar que el modelo entre estas dos variables es bueno. 
+De igual forma, para el modelo 2 los valores p no son significativos y también se acepta la hipótesis nula. La frecuencia para hablar de problemas con familia y amigos no se relaciona con la percepción del estado de ánimo actual luego del comienzo de la pandemia. 
 
+En el modelo 3, tampoco se sostienen valores p significativos, por lo tanto se rechaza la hipótesis alternativa, y se afirma la no existencia de efecto entre tales variables del modelo. 
 
+Por otro lado, para el modelo 4 la hipótesis en este caso se cumple en cierta medida, ya que la categoría de "adulto mayor" es significativa al 95%. Sin embargo, los valores no son significativos para la variable sexo. Se podría rechazar la ultima hipótesis.  
 
-
-4.2 Creamos el Modelo 3 con sexo y edad
-```{r modelo3, echo=TRUE}
-modelo3 <- lm(est_animo ~ sexo + edad, data = datos_proc, weights = factor_TS4)
-
-summary(modelo3) #Revisamos el modelo
-```
-
-**Tabla para Modelo 3**
-
-```{r tabla_modelo3, echo=FALSE}
-sjPlot::tab_model(modelo3, 
-                  show.ci=FALSE,  
-                  encoding = "UTF-8", 
-                  file = "../output/figures/tab_modelo3.doc")
-```
-
-
-4.4 Modelo Completo con todas las variables 
+4.3 Creamos un modelo completo con todas las variables 
 
 Creamos un modelo completo sin diseño muestral
 ```{r modelo_completo_sin, echo=TRUE}
@@ -157,45 +136,51 @@ modelo_survey <- svyglm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + p
 summary(modelo_survey) #Revisamos los valores del modelo
 ```
 
+Y también creamos un modelo sin pesos muestrales
+```{r model0, echo=TRUE}
+modelo0 <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc)
 
+summary(modelo0)  #Revisamos los valores para comparar con modelo con pesos                     muestrales
 
-**Tabla para Modelo Completo** 
-
-```{r tabla_model_comp, echo=FALSE}
-sjPlot::tab_model(modelo_completo, 
-                  show.ci=FALSE,  
-                  encoding = "UTF-8", 
-                  file = "../output/figures/tab_modelo_completo.doc")
 ```
 
-**Tabla para Modelo survey**
-```{r tabla0, echo=FALSE}
-sjPlot::tab_model(modelo_survey, 
-                  show.ci=FALSE,  
-                  encoding = "UTF-8",
-                  p.val = "wald",
-                  transform = "exp",
-                  file = "../output/figures/tab_modelo_survey.doc")
-```
-
-**Tabla con todos los modelos**
-
-```{r tab_all, echo=FALSE}
-sjPlot::tab_model(list(modelo1,modelo2,modelo3),
+**Tabla con ambos modelos completos**
+```{r tabla2, echo=FALSE, include=TRUE}
+sjPlot::tab_model(list(modelo_completo,modelo_survey),
   string.intercept = "(Intercepto)",
   string.pred = "Predictores",
   p.style = "stars",
   show.ci = FALSE,
   collapse.ci = T,
   digits = 3,
-  dv.labels = c("Modelo 1", "Modelo 2","Modelo 3"),
+  dv.labels = c("Modelo sin diseño muestral", "Modelo con diseño muestral"),
+  show.reflvl = TRUE,
+  p.val = "wald",
+  encoding = "UTF-8",
+  lang = "es")
+```
+
+El modelo completo sin diseño muestral, los valores p no presentan ninguna significancia y el R^2 presenta un valor bastante bajo, lo que sgnifica que el modelo no tiene mayor peso frente al análisis sobre la población. 
+
+Por otro lado, el modelo completo con diseño muestral presenta significancia en una sola categoría al 99%. Además, la mayoría de los coeficientes presentan relacion de dirección negativa. Los valores p son altos e implica que en su mayoría que la relación entre las variables independientes del modelo y la dependiente no son significativas, es decir, no tienen mayor efecto. 
+
+**Tabla con modelo completo con peso muestral y el modelo completo sin pesos muestrales**
+
+```{r tabla3, echo=FALSE, include=TRUE}
+sjPlot::tab_model(list(modelo_completo,modelo0),
+  string.intercept = "(Intercepto)",
+  string.pred = "Predictores",
+  p.style = "stars",
+  show.ci = FALSE,
+  collapse.ci = T,
+  digits = 3,
+  dv.labels = c("Modelo con pesos muestrales", "Modelo sin pesos muestrales"),
   show.reflvl = TRUE,
   encoding = "UTF-8",
   lang = "es")
 ```
 
-
-5. Gráfico para Modelo Completo 
+5. Gráfico para Modelo Completo sin diseño muestral  
 ```{r grafico1, echo=FALSE}
 plot_model(modelo_completo, type = c("est"),
   show.intercept = T,
@@ -206,19 +191,24 @@ plot_model(modelo_completo, type = c("est"),
   title = "Modelo de regresión lineal para Modelo Completo")
 ```
 
+5.1 Gráfico para Modelo completo con diseño muestral
 ```{r grafico2}
 plot_model(modelo_survey, type = c("est"),
   show.intercept = T,
   show.values = T,
   show.p = T,
   digits = 3,
-  vline.color = "red",
+  vline.color = "yellow",
   title = "Modelo de regresión lineal para Modelo Completo con diseño muestral")
 ```
 
-
+En general los modelos no presentan mayores diferencias, sin embargo se puede afirmar que ambos entregan resultados insuficientes para afirmar y responder a nuestra pregunta de investigación inicial. 
 
 # Conclusiones
+
+Finalmente, podemos indicar que la relacion de los modelos no presenta relevancia para un análisis poblacional. Además de no presentan valores significativos, no explica mayormente la relación que se interesa investigar aqui. La salud mental ha estado marcada en la pandemia por distintos factores, sin embargo, en nuestro caso se rechazaron todas las hipótesis planteadas en un inicio mediante los modelos de regresion. En este sentido, además de afirmar que la mayoría de las relaciones entre variables son negativas, no explican un efecto. Por lo tanto, si bien la salud mental se ha visto afectada y así mismo el estado de ánimo, puede ser que los factores psicosociales no presenten un factor de peso para afectarla. Puede ser que los factores económico-laborales, que también se vieron muy afectados por la pandemia, presenten mayor influencia en el estado de ánimo de los chilenos/as, ya que el confinamiento además de privarles de libertades básicas como salir a caminar, ha dejado millones de personas cesantes y con problemas financieros graves. Dejamos abierta la posibilidad de poder conocer si otros factores afectan en mayor medida la salud mental en pandemia. 
+
+
 # Referencias 
 - Buitrago, F., Ciurana, R., Fernández, M., Tizón, J. (2021) Repercusiones de la pandemia de la COVID-19 en la salud mental de la población general. Reflexiones y propuestas. Elsevier España, Vol. 3, n°7. Recuperado de: https://www.sciencedirect.com/science/article/pii/S0212656721001773?via%3Dihub 
 

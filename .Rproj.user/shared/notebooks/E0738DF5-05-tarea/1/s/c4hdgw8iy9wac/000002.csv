@@ -1,0 +1,8 @@
+"0","get_model_data (modelo2, "
+"0","                type = c(""pred""),"
+"0","                terms = ""trabaja"")"
+"1","[31m`trabaja` was not found in model terms. Maybe misspelled?
+[39m"
+"2","Error in names(x) <- value : 
+  'names' attribute [2] must be the same length as the vector [1]
+"
