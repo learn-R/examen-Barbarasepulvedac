@@ -55,7 +55,7 @@ pacman::p_load(tidyverse, sjPlot,
                srvyr,
                survey,
                magrittr,
-               dyplr)
+               dyplr) # dplyr
 
 ```
 
