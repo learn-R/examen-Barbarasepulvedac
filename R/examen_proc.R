@@ -59,7 +59,7 @@ datos_proc<-datos_proc %>%
                                 problemas == 3 ~ "A veces",
                                 problemas == 4 ~ "Siempre",
                                 problemas == 5 ~ "Siempre",
-                                 FALSE ~ NA_character_))
+                                 FALSE ~ NA_character_)) # aquí es TRUE no FALSE
 
 
 ##Le indicamos a R que estas variables son de factor para utilizarlas en la regresion lineal
