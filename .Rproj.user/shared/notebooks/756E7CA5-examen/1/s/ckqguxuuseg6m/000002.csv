@@ -1,0 +1,3 @@
+"0","obj_enc <- datos_proc %>% "
+"0","  as_survey_design(ids = 1 ,"
+"0","                   weights = factor_TS4) "

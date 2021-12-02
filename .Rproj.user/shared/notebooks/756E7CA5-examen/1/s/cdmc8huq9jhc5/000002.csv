@@ -1,0 +1,2 @@
+"0","modelo0 <- lm(est_animo ~ tipo_vivienda + trat_salud + sexo + edad + problemas2, data = datos_proc)"
+"0",""

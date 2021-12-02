@@ -1,0 +1,38 @@
+"0","pacman::p_load(tidyverse, sjPlot, "
+"0","               srvyr,"
+"0","               survey,"
+"0","               magrittr,"
+"0","               dyplr)"
+"2","Installing package into ‘C:/Users/Barby/Documents/R/win-library/4.1’
+(as ‘lib’ is unspecified)
+"
+"2","Warning:"
+"2"," package ‘dyplr’ is not available for this version of R
+
+A version of this package for your version of R might be available elsewhere,
+see the ideas at
+https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
+"
+"2","Warning:"
+"2"," unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1:
+  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1/PACKAGES'
+"
+"2","Warning:"
+"2"," 'BiocManager' not available.  Could not check Bioconductor.
+
+Please use `install.packages('BiocManager')` and then retry.
+"
+"2","Warning in p_install(package, character.only = TRUE, ...) :"
+"2"," 
+"
+"2","Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE,  :"
+"2","
+ "
+"2"," there is no package called ‘dyplr’
+"
+"2","Warning in pacman::p_load(tidyverse, sjPlot, srvyr, survey, magrittr, dyplr) :"
+"2","
+ "
+"2"," Failed to install/load:
+dyplr
+"
